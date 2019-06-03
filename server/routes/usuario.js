@@ -5,7 +5,31 @@ const _ = require('underscore');
 const app = express();
 
 app.get('/usuario', function (req, res) {
-    res.json('get usuario')
+    let desde = req.query.desde || 0;
+    let limite = req.query.limite || 5;
+    desde = Number(desde);
+    limite = Number(limite);
+
+    Usuario.find({}, 'nombre email rol estado')
+        .skip(desde)
+        .limit(limite)
+        .exec( (err, usuarios) => {
+            if(err){
+                return res.status(400).json({
+                    ok: false,
+                    err
+                })
+            }
+
+            Usuario.countDocuments({}, (err, cantidad) => {
+                res.json({
+                    ok: true,
+                    cantidad,
+                    usuarios
+                })
+            })
+
+        })
 });
 
 app.post('/usuario', (rep, res) => {
