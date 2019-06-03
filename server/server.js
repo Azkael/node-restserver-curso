@@ -1,5 +1,6 @@
 require('./config/config');
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -9,27 +10,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //parse application/json
 app.use(bodyParser.json());
 
-app.get('/usuario', function (req, res) {
-    res.json('get usuario')
-});
+app.use( require('./routes/usuario'));
 
-app.post('/usuario', (rep, res) => {
-    let body = rep.body;
-    if(body.nombre)
-        res.json(body);
-    else{
-        res.status(400).json({
-            ok: false,
-            message: "El nombre es necesario"
-        })
-    }
-});
-
-app.put('/usuario/:id', (rep, res) => {
-    let id = rep.params.id;
-    res.json({
-        id
-    })
+mongoose.connect('mongodb://localhost:27017/cafe', {
+    useCreateIndex: true,
+    useNewUrlParser: true
 });
 
 app.listen(process.env.PORT, () => console.log(`Escuchando puerto ${process.env.PORT}`));
