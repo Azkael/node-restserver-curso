@@ -4,13 +4,17 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const app = express();
 
-app.get('/usuario', function (req, res) {
+app.get('/usuario',function (req, res) {
     let desde = req.query.desde || 0;
     let limite = req.query.limite || 5;
     desde = Number(desde);
     limite = Number(limite);
 
-    Usuario.find({}, 'nombre email rol estado')
+    let filtro = {
+        estado: true
+    }
+
+    Usuario.find(filtro, 'nombre email rol estado')
         .skip(desde)
         .limit(limite)
         .exec( (err, usuarios) => {
@@ -21,7 +25,7 @@ app.get('/usuario', function (req, res) {
                 })
             }
 
-            Usuario.countDocuments({}, (err, cantidad) => {
+            Usuario.countDocuments(filtro, (err, cantidad) => {
                 res.json({
                     ok: true,
                     cantidad,
@@ -79,8 +83,29 @@ app.put('/usuario/:id', (rep, res) => {
     });
 });
 
-app.delete('/usuario', (rep, res) => {
-    res.json('delete usuario')
+app.delete('/usuario/:id', (rep, res) => {
+    let id = rep.params.id;
+
+    //Usuario.findByIdAndRemove(id, (err, usuario) => {
+    let cambioEstado = {
+        estado: false
+    }
+    Usuario.findByIdAndUpdate(id,cambioEstado, {
+        new: false,
+    }, (err, usuario) => {
+        if(err){
+            return res.status(400).json({
+                ok: false,
+                err
+            })
+        }
+
+        res.json({
+            ok: true,
+            usuario
+        })
+
+    })
 });
 
 module.exports = app;
