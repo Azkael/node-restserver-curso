@@ -12,12 +12,12 @@ app.use(bodyParser.json());
 
 app.use( require('./routes/usuario'));
 
-mongoose.connect('mongodb://localhost:27017/cafe', {
-    useFindAndModify: false,
+mongoose.connect(process.env.URLDB, {
     useCreateIndex: true,
     useNewUrlParser: true
 }, (err) => {
     if(err) console.log('No se pudo conectar a la base de datos!!!')
+    else console.log('Base de datos ONLINE!!')
 });
 
 app.listen(process.env.PORT, () => console.log(`Escuchando puerto ${process.env.PORT}`));
