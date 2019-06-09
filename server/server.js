@@ -19,7 +19,8 @@ app.use( require('./routes'));
 
 mongoose.connect(process.env.URLDB, {
     useCreateIndex: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false
 }, (err) => {
     if(err) console.log('No se pudo conectar a la base de datos!!!')
     else console.log('Base de datos ONLINE!!')

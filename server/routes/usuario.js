@@ -39,8 +39,8 @@ app.get('/usuario', verificaToken, (req, res) => {
         })
 });
 
-app.post('/usuario', [verificaToken, verifcaAdmin],(rep, res) => {
-    let body = rep.body;
+app.post('/usuario', [verificaToken, verifcaAdmin],(req, res) => {
+    let body = req.body;
     const {nombre, email, password, role} = body;
     let usuario = new Usuario({
         nombre,
@@ -64,9 +64,9 @@ app.post('/usuario', [verificaToken, verifcaAdmin],(rep, res) => {
     });
 });
 
-app.put('/usuario/:id', [verificaToken, verifcaAdmin],(rep, res) => {
-    let id = rep.params.id;
-    let body = _.pick(rep.body, ['nombre','email','img','role','estado']);
+app.put('/usuario/:id', [verificaToken, verifcaAdmin],(req, res) => {
+    let id = req.params.id;
+    let body = _.pick(req.body, ['nombre','email','img','role','estado']);
 
     Usuario.findByIdAndUpdate(id, body, {
         new: true,
@@ -86,8 +86,8 @@ app.put('/usuario/:id', [verificaToken, verifcaAdmin],(rep, res) => {
     });
 });
 
-app.delete('/usuario/:id', [verificaToken, verifcaAdmin],(rep, res) => {
-    let id = rep.params.id;
+app.delete('/usuario/:id', [verificaToken, verifcaAdmin],(req, res) => {
+    let id = req.params.id;
 
     //Usuario.findByIdAndRemove(id, (err, usuario) => {
     let cambioEstado = {
