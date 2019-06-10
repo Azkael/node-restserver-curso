@@ -106,7 +106,7 @@ app.post('/productos', verificaToken, (req, res) => {
         ...body,
         usuario: req.usuario._id
     })
-
+    
     if (verificaId(body.categoria) === false) {
         return res.status(400).json({
             ok: false,
@@ -116,7 +116,7 @@ app.post('/productos', verificaToken, (req, res) => {
         })
     }
 
-    Categoria.findById(body.categoia, (err, categoriaDb) => {
+    Categoria.findById(body.categoria, (err, categoriaDb) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
